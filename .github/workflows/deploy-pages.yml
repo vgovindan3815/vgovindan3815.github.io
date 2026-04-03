@@ -1,0 +1,40 @@
+name: Deploy Prototype to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+      - freight-contract-generator
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static web app
+        run: npm run build --workspace=apps/web -- --configuration production --output-mode static --base-href /
+
+      - name: Deploy to main branch (GitHub Pages)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: main
+          publish_dir: ./apps/web/dist/web/browser
+          force_orphan: true
+          enable_jekyll: false

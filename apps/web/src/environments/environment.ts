@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  demoMode: false,
   bypassAuth: true,
   msalClientId: 'YOUR_AZURE_CLIENT_ID',
   msalTenantId: 'YOUR_AZURE_TENANT_ID',
